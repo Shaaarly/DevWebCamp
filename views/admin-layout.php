@@ -26,7 +26,7 @@
             </main>
         </div>
 
-    <script src="/build/js/bundle.min.js" defer></script>
+    <script src="/build/js/main.min.js" defer></script>
     <!-- <script src="https://kit.fontawesome.com/f03bcf4820.js" crossorigin="anonymous"></script> -->
 </body>
 </html>
