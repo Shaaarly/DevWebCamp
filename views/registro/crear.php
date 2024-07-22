@@ -44,8 +44,8 @@
 
 </main>
 
-<script src="https://www.paypal.com/sdk/js?client-id=BAAqpfJMHSGkykMZIyDEyHJ2nW3GEz7QygxOVIxdAObtXRGNW5m_bewxMSQt-nAM8TWNxPkxFnl4t_eRPU&components=hosted-buttons&disable-funding=venmo&currency=EUR"></script>
-
+<script src="https://www.paypal.com/sdk/js?client-id=AX3-7NXjfKsSpwcvre5t6ZdBZEDETEefGjGDLEaQUEIRuLbXy0pWwCfNjdLkXYwSsWv5vCvP-FLkoF2M&enable-funding=venmo&currency=EUR" data-sdk-integration-source="button-factory"></script>
+ 
 <script>
     function initPayPalButton() {
       paypal.Buttons({
@@ -64,18 +64,26 @@
  
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
+
+            const datos = new FormData();
+            datos.append('paquete_id', orderData.purchase_units[0].description);
+            datos.append('pago_id', orderData.purchase_units[0].payments.captures[0].id);
+
+            fetch('/finalizar-registro/pagar', {
+              method: 'POST',
+              body: datos
+            })
+            .then( respuesta => respuesta.json())
+            .then( resultado => {
+              console.log(resultado);
+              if(resultado.resultado) {
+                window.location.href = '/finalizar-registro/conferencias'
+              }
+            });
  
             // Full available details
-            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
- 
-            // Show a success message within this page, e.g.
-            const element = document.getElementById('paypal-button-container');
-            element.innerHTML = '';
-            element.innerHTML = '<h3>Thank you for your payment!</h3>';
- 
-            // Or go to another URL:  actions.redirect('thank_you.html');
-            
-          });
+            // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+           });
         },
  
         onError: function(err) {
@@ -86,5 +94,3 @@
  
   initPayPalButton();
 </script>
-
-
