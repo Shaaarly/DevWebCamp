@@ -24,6 +24,8 @@ Proyecto basado en arquitectura Model View Controller. Los lenguajes utilizados 
 - Visualización de los eventos y ponentes disponibles
 - Selección de eventos para el usuario registrado
 - Modificación de plan del cliente
+- Resumen de estadisticas para administrador
+- Control de productos para regalar
 
 ## Instalación
 

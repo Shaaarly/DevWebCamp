@@ -6,12 +6,21 @@ use Model\Ponente;
 
 class APIPonentes {
 
-    public static function index() {        
+    public static function index() {  
+        
+        if(!is_admin()) {
+            echo json_encode([]);
+            return;
+        }
         $ponentes = Ponente::all();
         echo json_encode($ponentes);
     }
 
     public static function ponente() {
+        if(!is_admin()) {
+            echo json_encode([]);
+            return;
+        }
         $id = $_GET['id'];
         $id = filter_var($id, FILTER_VALIDATE_INT);
 

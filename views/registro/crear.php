@@ -39,6 +39,7 @@
             </ul>
 
             <p class="paquete__precio">49€</p>
+            <div id="paypal-button-container-virtual"></div>
         </div>
     </div>
 
@@ -90,6 +91,50 @@
           console.log(err);
         }
       }).render('#paypal-button-container');
+
+      // Pase Virtual
+      paypal.Buttons({
+        style: {
+          shape: 'rect',
+          color: 'blue',
+          layout: 'vertical',
+          label: 'pay',
+        },
+ 
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{"description":"2","amount":{"currency_code":"EUR","value":49}}]
+          });
+        },
+ 
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(orderData) {
+
+            const datos = new FormData();
+            datos.append('paquete_id', orderData.purchase_units[0].description);
+            datos.append('pago_id', orderData.purchase_units[0].payments.captures[0].id);
+
+            fetch('/finalizar-registro/pagar', {
+              method: 'POST',
+              body: datos
+            })
+            .then( respuesta => respuesta.json())
+            .then( resultado => {
+              console.log(resultado);
+              if(resultado.resultado) {
+                window.location.href = `/boleto?id=${resultado.token}`;
+              }
+            });
+ 
+            // Full available details
+            // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+           });
+        },
+ 
+        onError: function(err) {
+          console.log(err);
+        }
+      }).render('#paypal-button-container-virtual');
     }
  
   initPayPalButton();

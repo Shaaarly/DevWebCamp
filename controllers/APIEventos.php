@@ -7,10 +7,11 @@ use Model\EventoHorario;
 class APIEventos
 {
 
-    public static function index()
-    {        
-        // // Establecer el encabezado Content-Type a application/json
-        // header('Content-Type: application/json');
+    public static function index(){        
+        if(!is_admin()) {
+            echo json_encode([]);
+            return;
+        }
  
         $dia_id = $_GET['dia_id'] ?? '';
         $categoria_id = $_GET['categoria_id'] ?? '';
